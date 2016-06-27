@@ -21,7 +21,7 @@ for (( c=0; c<$total; c+=$threads )); do
  find . -name "*.bam" | xargs -n 1 -P $threads -iFILES sh -c 'picard-tools SamToFastq I=FILES F=FILES.1.fq F2=FILES.2.fq'
  for f in $(find . -name "*.1.fq"); do
   replace=$(echo $f | sed 's/1\.fq/2\.fq/g');
-  STAR --runMode alignReads --outFileNamePrefix "$line". --runThreadN 32 --genomeDir /mnt/ --genomeLoad LoadAndKeep --readFilesIn "$f" "$replace" --outSAMtype BAM Unsorted --outFilterType BySJout --outFilterMultimapNmax 20  --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.04 --alignIntronMin 20 --alignIntronMax 1000000  --alignMatesGapMax 1000000;
+  STAR --runMode alignReads --outFileNamePrefix "$f". --runThreadN 32 --genomeDir /mnt/ --genomeLoad LoadAndKeep --readFilesIn "$f" "$replace" --outSAMtype BAM Unsorted --outFilterType BySJout --outFilterMultimapNmax 20  --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.04 --alignIntronMin 20 --alignIntronMax 1000000  --alignMatesGapMax 1000000;
  done;
  STAR --genomeLoad Remove --genomeDir /mnt/
  find . -name "*.Aligned.out.bam" | xargs -n 1 -P $threads -iFILES sh -c 'samtools sort FILES FILES.sort'
