@@ -11,7 +11,7 @@ split -l "$twothreads" manifest.txt xxx;
 for f in $(ls xxx*); do
  echo -ne "id\tfilename\tmd5\tsize\tstate\n" > "yyy.$f.manifest";
  cat "$f" >> "yyy.$f.manifest";
-done
+done;
 for f in $(ls *.manifest); do
  gdc-client download -t ~/token.txt --no-segment-md5sums --no-file-md5sum -m "$f";
  find . -name "*.bam" | xargs -n 1 -P "$twothreads" -iFILES sh -c 'picard-tools SamToFastq I=FILES F=FILES.1.fq F2=FILES.2.fq'
@@ -19,11 +19,11 @@ for f in $(ls *.manifest); do
   replace=$(echo "$z" | sed 's/1\.fq/2\.fq/g');
   STAR --runMode alignReads --outFileNamePrefix "$z". --runThreadN "$twothreads" --genomeDir /mnt/ --genomeLoad LoadAndKeep --readFilesIn "$z" "$replace" --outSAMtype BAM Unsorted --outFilterType BySJout --outFilterMultimapNmax 20  --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.04 --alignIntronMin 20 --alignIntronMax 1000000  --alignMatesGapMax 1000000;
  done;
- STAR --genomeLoad Remove --outFileNamePrefix genome.remove. --genomeDir /mnt/
- find . -name "*.Aligned.out.bam" | xargs -n 1 -P "$twothreads" -iFILES sh -c 'samtools sort FILES FILES.sort'
+ STAR --genomeLoad Remove --outFileNamePrefix genome.remove. --genomeDir /mnt/;
+ find . -name "*.Aligned.out.bam" | xargs -n 1 -P "$twothreads" -iFILES sh -c 'samtools sort FILES FILES.sort';
  todo=$(find . -name "*sort.bam");
- fcs "$threads" /mnt/genes.gtf $todo > "count_index_$f.feature.txt"
- fci "$threads" /mnt/ident-intergenic.gtf $todo > "count_index_$f.intergenic.txt"
- rm -rf */
-done
-exit 0
+ fcs "$threads" /mnt/genes.gtf $todo > "count_index_$f.feature.txt";
+ fci "$threads" /mnt/ident-intergenic.gtf $todo > "count_index_$f.intergenic.txt";
+ rm -rf */;
+done;
+exit 0;
